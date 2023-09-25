@@ -2,13 +2,19 @@ import argparse
 
 def create_parser():
     parser = argparse.ArgumentParser(
-        prog="SuperPy", description="Supermarket Inventory Management")
+        prog="SuperPy", description="Supermarket Inventory Management", epilog="Thanks for using SuperPy!")
     subparsers = parser.add_subparsers(dest="command", title="commands")
 
+    # Get today command
+    parser_get_today = subparsers.add_parser(
+        "get_today", help="Get the current date")
+    
+    # Set today command
     parser_set_today = subparsers.add_parser(
         "set_today", help="Set the current date")
     parser_set_today.add_argument(
         "date", help="The date (YYYY-MM-DD) to set as today")
+
 
     parser_advance_time = subparsers.add_parser(
         "advance_time", help="Advance the current date")
@@ -16,20 +22,21 @@ def create_parser():
         "days", type=int, help="The number of days to advance")
 
     parser_buy = subparsers.add_parser("buy", help="Buy a product")
-    parser_buy.add_argument(
+    parser_buy.add_argument("-pn",
         "--product-name", required=True, help="Name of the product")
-    parser_buy.add_argument("--price", type=float,
+    parser_buy.add_argument("-pr", "--price", type=float,
                             required=True, help="Price of the product")
-    parser_buy.add_argument("--expiration-date", required=True,
+    parser_buy.add_argument("-ed","--expiration-date", required=True,
                             help="Expiration date of the product (YYYY-MM-DD)")
-    parser_buy.add_argument("--quantity", type=int, default=1,
+    parser_buy.add_argument("-q","--quantity", type=int, default=1,
                             help="Quantity of the product to buy (default is 1)")
 
     parser_sell = subparsers.add_parser("sell", help="Sell a product")
-    parser_sell.add_argument(
+    parser_sell.add_argument("-pn",
         "--product-name", required=True, help="Name of the product")
-    parser_sell.add_argument(
+    parser_sell.add_argument("-pr",
         "--price", type=float, required=True, help="Selling price of the product")
+    parser_sell.add_argument("-q", "--quantity", type=int, default=1, help="Quantity of the product to sell (default is 1)")
 
     # Report command with sub-parsers for different report types
     parser_report = subparsers.add_parser("report", help="Generate reports")

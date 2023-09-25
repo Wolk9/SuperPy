@@ -21,21 +21,37 @@ SuperPy is a command-line based inventory management tool designed to keep track
 
    python super.py set_today YYYY-MM-DD
 
-2. **Advance Current Date**
+2. **Get Current Date**
+
+  python super.py get_today
+
+3. **Advance Current Date**
 
    python super.py advance_time <number_of_days>
 
-3. **Buy a Product**
+4. **Buy a Product**
 
-   python super.py buy --product-name "Product Name" --price <buy_price> --expiration-date YYYY-MM-DD --quantity <quantity>
+   python super.py buy --product-name "Product Name" --price <buy_price> --expiration-date YYYY-MM-DD --quantity 5
 
    The --quantity option allows you to specify the quantity of the product to buy (default is 1).
 
-4. **Sell a Product**
+5. **Sell a Product**
 
-   python super.py sell --product-name "Product Name" --price <sell_price>
+   python super.py sell --product-name "Product Name" --price <sell_price> --quantity 5
 
-5. **Generate Reports**:
+   Only not expired products will be sold.
+
+   The --quantity option allows you to specify the quantity of the product to sell (default is 1).
+
+6. **Toss all expired products**
+
+   python super.py toss --expired
+
+7. **Toss all products**
+
+   python super.py toss --all
+
+9. **Generate Reports**:
    - **Inventory Report for Today**:
      python super.py report inventory --now
    - **Inventory Report for Yesterday**:
