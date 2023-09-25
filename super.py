@@ -3,7 +3,7 @@ import argparse
 import csv
 import datetime
 import os
-import tabulate
+from tabulate import tabulate
 from create_parser import create_parser
 
 # Do not change these lines.
@@ -204,8 +204,6 @@ def export_csv(file_name, rows):
 
 
 def main():
-    
-
     create_data_files()
     
     args = create_parser()
