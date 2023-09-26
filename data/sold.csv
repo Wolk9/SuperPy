@@ -1,1 +1,1 @@
-id,bought_id,sell_date,sell_price
+sold_id,bought_id,product-name,sell_date,sell_price
