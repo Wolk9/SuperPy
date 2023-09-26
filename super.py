@@ -4,7 +4,7 @@ import csv
 import datetime
 import os
 from tabulate import tabulate
-from create_files import create_data_files
+from create_files import create_data_files, update_inventory
 from create_parser import create_parser
 
 # Do not change these lines.
@@ -13,10 +13,15 @@ __human_name__ = "superpy"
 
 # Your code below this line.
 
-
+DATA_DIR = os.path.join(os.getcwd(), "data")
+TODAY_FILE = os.path.join(DATA_DIR, "today.txt")
+BOUGHT_FILE = os.path.join(DATA_DIR, "bought.csv")
+SOLD_FILE = os.path.join(DATA_DIR, "sold.csv")
+EXPIRED_FILE = os.path.join(DATA_DIR, "expired.csv")
 
 def main():
     create_data_files()
+    update_inventory()
     args = create_parser()
     
     parser = argparse.ArgumentParser()
@@ -67,24 +72,29 @@ def main():
         else:
             parser.print_help()
             
-        
             
 
-def get_today():
-    if not os.path.exists(TODAY_FILE):
-        return datetime.date.today()
-
-    with open(TODAY_FILE, "r") as file:
-        today_str = file.read().strip()
-    return datetime.datetime.strptime(today_str, "%Y-%m-%d").date()
-
-# funtion to set the date to work with
+    
+# function to get the date from the parser to generate the report with.
 
 
-def set_today(date):
-    with open(TODAY_FILE, "w") as file:
-        file.write(date.strftime("%Y-%m-%d"))
-    print("Today's date set to:", date)
+def get_report_date(args):
+    today = get_today()
+    if args.report_type == "inventory":
+        if args.now:
+            return today
+        elif args.yesterday:
+            return today - datetime.timedelta(days=1)
+        elif args.date:
+            return datetime.datetime.strptime(args.date, "%Y-%m-%d").date()
+    elif args.report_type == "revenue" or args.report_type == "profit":
+        if args.today:
+            return today
+        elif args.date:
+            return datetime.datetime.strptime(args.date, "%Y-%m-%d").date()
+    return None
+
+
 
 
 
