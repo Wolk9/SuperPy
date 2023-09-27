@@ -6,12 +6,16 @@ BOUGHT_FILE = os.path.join(DATA_DIR, "bought.csv")
 SOLD_FILE = os.path.join(DATA_DIR, "sold.csv")
 EXPIRED_FILE = os.path.join(DATA_DIR, "expired.csv")
 INVENTORY_FILE = os.path.join(DATA_DIR, "inventory.csv")
+COSTS_FILE = os.path.join(DATA_DIR, "costs.csv")
+
+DATE_FORMAT = "%Y-%m-%d"
 
 BOUGHT_HEADER = ["bought_id", "product_name",
                  "buy_date", "buy_price", "expiration_date"]
 SOLD_HEADER = ["sold_id", "bought_id",
                "product-name", "sell_date", "sell_price"]
-EXPIRED_HEADER = ["expired_id", "expiration_date",
-                  "bought_id", "product_name", "buy_date", "buy_price"]
+EXPIRED_HEADER = ["bought_id", "product_name",
+                  "buy_date", "buy_price", "expiration_date"]
 INVENTORY_HEADER = ["bought_id", "product_name",
-                    "quantity", "buy_date", "buy_price", "expiration_date"]
+                    "buy_date", "buy_price", "expiration_date"]
+COSTS_HEADER = ["cost_id", "number_of_products", "cost_date", "total_cost"]  

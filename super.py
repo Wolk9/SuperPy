@@ -4,8 +4,10 @@ import csv
 import datetime
 import os
 from tabulate import tabulate
-from create_files import create_data_files, update_inventory
-from create_parser import create_parser
+from functions.files import create_data_files, update_inventory
+from core.create_parser import create_parser
+from functions.dates import get_today, set_today, advance_time
+from functions.reports import get_inventory_report, get_revenue_report, get_profit_report, get_report_date
 
 # Do not change these lines.
 __winc_id__ = "a2bc36ea784242e4989deb157d527ba0"
@@ -21,7 +23,7 @@ EXPIRED_FILE = os.path.join(DATA_DIR, "expired.csv")
 
 def main():
     create_data_files()
-    update_inventory()
+    
     args = create_parser()
     
     parser = argparse.ArgumentParser()
@@ -33,20 +35,26 @@ def main():
     # the set_today function is added to the parser
     if args.command == "set_today":
         set_today(datetime.datetime.strptime(args.date, "%Y-%m-%d").date())
+        update_inventory()
     elif args.command == "get_today":
         print(get_today())
+        update_inventory()
     # the advance_time function is added to the parser
     elif args.command == "advance_time":
         advance_time(args.days)
+        update_inventory()
     # the buy function is added to the parser
     elif args.command == "buy":
+        update_inventory()
         buy_product(args.product_name, args.price,
                     args.expiration_date, args.quantity)
     # the sell function is added to the parser
     elif args.command == "sell":
+        update_inventory()
         sell_product(args.product_name, args.price, args.quantity)
     # the report function is added to the parser
     elif args.command == "report":
+        update_inventory()
         report_date = get_report_date(args)
 
         # Check which report type was given
@@ -75,27 +83,20 @@ def main():
             
 
     
-# function to get the date from the parser to generate the report with.
-
-
-def get_report_date(args):
-    today = get_today()
-    if args.report_type == "inventory":
-        if args.now:
-            return today
-        elif args.yesterday:
-            return today - datetime.timedelta(days=1)
-        elif args.date:
-            return datetime.datetime.strptime(args.date, "%Y-%m-%d").date()
-    elif args.report_type == "revenue" or args.report_type == "profit":
-        if args.today:
-            return today
-        elif args.date:
-            return datetime.datetime.strptime(args.date, "%Y-%m-%d").date()
-    return None
 
 
 
+def delete_bought_product(product_id):
+    with open(BOUGHT_FILE, "r", newline="") as f:
+        reader = csv.reader(f)
+        rows = list(reader)
+
+    with open(BOUGHT_FILE, "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow(rows[0])
+        for row in rows[1:]:
+            if row[0] != product_id:
+                writer.writerow(row)
 
 
 if __name__ == "__main__":
