@@ -9,6 +9,8 @@ from functions.files import create_data_files
 from functions.dates import get_today, set_today, advance_time
 from functions.reports import get_inventory_report, get_revenue_report, get_profit_report, get_report_date
 from functions.inventory import update_inventory
+from functions.buy import buy_product
+from functions.sell import sell_product
 
 # Do not change these lines.
 __winc_id__ = "a2bc36ea784242e4989deb157d527ba0"
