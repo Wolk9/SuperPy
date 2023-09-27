@@ -4,10 +4,11 @@ import csv
 import datetime
 import os
 from tabulate import tabulate
-from functions.files import create_data_files, update_inventory
-from core.create_parser import create_parser
+from core.parser import create_parser
+from functions.files import create_data_files
 from functions.dates import get_today, set_today, advance_time
 from functions.reports import get_inventory_report, get_revenue_report, get_profit_report, get_report_date
+from functions.inventory import update_inventory
 
 # Do not change these lines.
 __winc_id__ = "a2bc36ea784242e4989deb157d527ba0"

@@ -4,7 +4,7 @@ import csv
 import datetime
 import os
 from tabulate import tabulate
-from core.create_parser import create_parser
+from core.parser import create_parser
 
 # Do not change these lines.
 __winc_id__ = "a2bc36ea784242e4989deb157d527ba0"
