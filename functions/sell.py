@@ -1,7 +1,7 @@
 import csv
 import datetime
 from functions.dates import get_today
-from core.constants import INVENTORY_FILE, SOLD_FILE, EXPIRED_FILE
+from core.constants import INVENTORY_FILE, SOLD_FILE, INVENTORY_HEADER, EXPIRED_FILE
 from functions.inventory import get_next_id
 
 # function to sell products that are on stock and not expired.
@@ -12,7 +12,7 @@ from functions.inventory import get_next_id
 
 
 def sell_product(product_name, price, quantity=1):
-    price = float(price)
+    price = round(float(price),2)
     today = get_today()
     with open(INVENTORY_FILE, "r", newline="") as inventory_file, \
             open(SOLD_FILE, "a", newline="") as sold_file:
@@ -42,25 +42,25 @@ def sell_product(product_name, price, quantity=1):
                     return
             else:
                 return
-
-        # Sell the products and add a record to the sold file
-        for product in products:
-            if quantity == 0:
-                break
-            if int(float(product[3])) >= quantity:
-                sold_quantity = quantity
-            else:
-                sold_quantity = int(float(product[3]))
-            product_id = product[0]
-            sold_id = get_next_id(SOLD_FILE)
-            sold_row = [sold_id, product_id, product_name, today.strftime("%Y-%m-%d"),
-                        price, sold_quantity]
-            sold_writer.writerow(sold_row)
-            product[3] = str(float(product[3]) - sold_quantity)
-
-        # Update the inventory file
         with open(INVENTORY_FILE, "w", newline="") as inventory_file:
             inventory_writer = csv.writer(inventory_file)
-            inventory_writer.writerows(products)
+            inventory_writer.writerow(INVENTORY_HEADER)
+        # Sell the products and add a record to the sold file
+            for product in products:
+                if quantity == 0:
+                    break
+                if int(float(product[3])) >= quantity:
+                    sold_quantity = quantity
+                else:
+                    sold_quantity = int(float(product[3]))
+                product_id = product[0]
+                sold_id = get_next_id(SOLD_FILE)
+                sold_row = [sold_id, product_id, product_name, today.strftime("%Y-%m-%d"),
+                            round(float(price), 2), sold_quantity]
+                sold_writer.writerow(sold_row)
+                product[3] = str(round(float(product[3]),2) - sold_quantity)
 
-        print(f"Sold {sold_quantity} {product_name}(s)")
+                # Update the inventory file
+                inventory_writer.writerows(products)
+
+        print(f"Sold {sold_quantity} {product_name}('s)")

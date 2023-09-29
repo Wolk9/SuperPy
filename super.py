@@ -3,6 +3,7 @@ import argparse
 import csv
 import datetime
 import os
+from rich import print
 from tabulate import tabulate
 from core.parser import create_parser
 from functions.files import create_data_files
