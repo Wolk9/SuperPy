@@ -23,7 +23,7 @@ SuperPy is a command-line based inventory management tool designed to keep track
 
 2. **Get Current Date**
 
-  python super.py get_today
+   python super.py get_today
 
 3. **Advance Current Date**
 
