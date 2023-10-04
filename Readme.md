@@ -74,6 +74,9 @@ All transaction data is stored in CSV files located in the `data` directory:
 
 - `bought.csv`: Contains details about products bought.
 - `sold.csv`: Contains details about products sold.
+- `inventory.csv`: Contains details about the not expired products.
+- `expired.csv`: Contains details about expired products.
+- `costs.csv`: Contains details about costs, like thrown away products (after expiring).
 
 ## Student Author
 
