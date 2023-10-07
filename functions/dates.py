@@ -5,13 +5,15 @@ import datetime
 
 
 def get_today():
-    print("Getting today's fictional date...")
+   
     if not os.path.exists(TODAY_FILE):
         return datetime.date.today()
 
     with open(TODAY_FILE, "r") as file:
         today_str = file.read().strip()
-    return datetime.datetime.strptime(today_str, "%Y-%m-%d").date()
+        today_date = datetime.datetime.strptime(today_str, "%Y-%m-%d").date()
+        print("Today's fictive date is:", today_date)
+    return today_date
 
 # funtion to set the date to work with
 

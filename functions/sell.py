@@ -25,23 +25,22 @@ def sell_product(product_name, price, quantity=1):
 
     # Find all products with the same name that are in stock
     products = []
+    available_quantity = 0
     for row in inventory:
         if row[1] == product_name and int(float(row[3])) > 0:
-            row[3] = round(float(row[3]), 2)  # round buy price to 2 decimal places
-            row[4] = datetime.datetime.strptime(row[4], "%Y-%m-%d").date()  # convert expiration date to date object
+            print("Found product:", row)
             products.append(row)
+            available_quantity += int(float(row[3]))
 
-    # Sort products by nearest expiring date and lowest buy price
-    products.sort(key=lambda x: (x[4], x[2]))
 
     # Check if there are enough products in stock
-    total_quantity = sum(int(float(product[3])) for product in products)
-    if total_quantity < quantity:
+    if available_quantity < quantity:
         print(f"Not enough {product_name}(s) in stock")
-        if total_quantity > 0:
-            answer = input(f"Do you want to sell the remaining {total_quantity} {product_name}(s)? (Yes/No) ")
+        if available_quantity > 0:
+            answer = input(
+                f"Do you want to sell the remaining {available_quantity} {product_name}(s)? (Yes/No) ")
             if answer.lower() == "yes":
-                quantity = total_quantity
+                quantity = available_quantity
             else:
                 return
         else:
@@ -66,9 +65,9 @@ def sell_product(product_name, price, quantity=1):
                         round(float(price), 2), sold_quantity]
             sold_writer.writerow(sold_row)
             product[3] = str(round(float(product[3]), 2) - sold_quantity)
-            inventory_writer.writerow(product)
+            if float(product[3]) > 0:
+                inventory_writer.writerow(product)
 
-            # Update the inventory file
-            inventory_writer.writerows(products)
+            quantity -= sold_quantity
 
     print(f"Sold {sold_quantity} {product_name}(s)")
