@@ -144,3 +144,7 @@ def get_next_id(file_path):
             return 1  # Return 1 as the default ID if there are no rows
         next_id = max(int(row[0]) for row in rows) + 1
     return next_id
+
+
+# TODO: the get_next_id function is used in the buy_product function. In the Sell product function the bought_id is used to identify the product it is thowing an error.
+
