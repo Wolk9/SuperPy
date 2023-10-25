@@ -12,6 +12,7 @@ from functions.reports import get_inventory_report, get_revenue_report, get_prof
 from functions.inventory import update_inventory
 from functions.buy import buy_product
 from functions.sell import sell_product
+from functions.richtable import output_table
 
 # Do not change these lines.
 __winc_id__ = "a2bc36ea784242e4989deb157d527ba0"
@@ -40,22 +41,27 @@ def main():
     if args.command == "set_today":
         set_today(datetime.datetime.strptime(args.date, "%Y-%m-%d").date())
         update_inventory()
+        output_table("inventory")
     elif args.command == "get_today":
         print(get_today())
         update_inventory()
+        output_table("inventory")
     # the advance_time function is added to the parser
     elif args.command == "advance_time":
         advance_time(args.days)
         update_inventory()
+        output_table("inventory")
     # the buy function is added to the parser
     elif args.command == "buy":
         update_inventory()
         buy_product(args.product_name, args.price,
                     args.expiration_date, args.quantity)
+        output_table("bought")
     # the sell function is added to the parser
     elif args.command == "sell":
         update_inventory()
         sell_product(args.product_name, args.price, args.quantity)
+        output_table("sold")
     # the report function is added to the parser
     elif args.command == "report":
         update_inventory()

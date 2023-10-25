@@ -1,73 +1,64 @@
 import csv
 import datetime
 from functions.dates import get_today
-from core.constants import INVENTORY_FILE, SOLD_FILE, INVENTORY_HEADER, EXPIRED_FILE
 from functions.inventory import get_next_id
+from core.constants import INVENTORY_FILE, SOLD_FILE, INVENTORY_HEADER, BOUGHT_FILE
 
 # function to sell products that are on stock and not expired.
-# In the inventory file there are separate records for the same product with another price.
+# In the INVENTORY_FILE there are separate records for each single product.
+# In the INVENTORY_FILE each product has a unique bought_id, a product_name, a buy_date, a buy_price and an expiration_date.    
 # to sell a product it first should check how many products are in stock with the same name and are not expired.
-# if there are enough products in stock, it sells the product and adds a record to the sold file.
+# if there are enough products in stock, it sells the product and adds a single record for each single sold product to the sold file.
+# in addition the record with the correspondent bought_id should be removed from the bought file.
+# the sold file contains records with a unique sold_id, a bought_id, a product_name, a sell_date and a sell_price.
+# the BOUGHT_FILE contains records with a unique bought_id, a product_name, a buy_date, a buy_price and an expiration_date.
 # if there are not enough products in stock, it gives a message that there are not enough products in stock.
 
-
 def sell_product(product_name, price, quantity=1):
-    # Round the price to two decimal places
-    price = round(float(price), 2)
-
-    # Get today's date
+    
+    # get today's date
     today = get_today()
 
-    # Read the inventory from the CSV file
-    with open(INVENTORY_FILE, "r", newline="") as inventory_file:
-        inventory_reader = csv.reader(inventory_file)
-        inventory = list(inventory_reader)[1:]
+    # read inventory file
+    with open(INVENTORY_FILE, 'r') as f:
+        reader = csv.DictReader(f)
+        inventory = list(reader)
 
-    # Find all products with the same name that are in stock
-    products = []
-    available_quantity = 0
-    for row in inventory:
-        if row[1] == product_name and int(float(row[3])) > 0:
-            print("Found product:", row)
-            products.append(row)
-            available_quantity += int(float(row[3]))
+    # filter inventory by product name and expiration date
+    filtered_inventory = [item for item in inventory if item['product_name'] == product_name and datetime.datetime.strptime(item['expiration_date'], '%Y-%m-%d').date() >= today]
 
-
-    # Check if there are enough products in stock
-    if available_quantity < quantity:
-        print(f"Not enough {product_name}(s) in stock")
-        if available_quantity > 0:
-            answer = input(
-                f"Do you want to sell the remaining {available_quantity} {product_name}(s)? (Yes/No) ")
-            if answer.lower() == "yes":
-                quantity = available_quantity
-            else:
-                return
-        else:
-            return
-
-    # Sell the products and update the inventory
-    with open(INVENTORY_FILE, "w", newline="") as inventory_file, \
-            open(SOLD_FILE, "a", newline="") as sold_file:
-        inventory_writer = csv.writer(inventory_file)
-        inventory_writer.writerow(INVENTORY_HEADER)
-        sold_writer = csv.writer(sold_file)
-        for product in products:
-            if quantity == 0:
-                break
-            if int(float(product[3])) >= quantity:
-                sold_quantity = quantity
-            else:
-                sold_quantity = int(float(product[3]))
-            product_id = product[0]
-            sold_id = get_next_id(SOLD_FILE)
-            sold_row = [sold_id, product_id, product_name, today.strftime("%Y-%m-%d"),
-                        round(float(price), 2), sold_quantity]
-            sold_writer.writerow(sold_row)
-            product[3] = str(round(float(product[3]), 2) - sold_quantity)
-            if float(product[3]) > 0:
-                inventory_writer.writerow(product)
-
-            quantity -= sold_quantity
-
-    print(f"Sold {sold_quantity} {product_name}(s)")
+    # check if there are enough products in stock
+    if len(filtered_inventory) >= quantity:
+        # sell products and update inventory and sold files
+        sold_items = []
+        with open(BOUGHT_FILE, 'r') as f:
+            reader = csv.DictReader(f)
+            bought_items = list(reader)
+            for i in range(quantity):
+                item = filtered_inventory[i]
+                sold_item = {
+                    'sold_id': get_next_id(SOLD_FILE),
+                    'bought_id': item['bought_id'],
+                    'product_name': item['product_name'],
+                    'sell_date': today,
+                    'sell_price': price
+                }
+                sold_items.append(sold_item)
+                inventory.remove(item)
+                bought_items = [bought_item for bought_item in bought_items if bought_item['bought_id'] != item['bought_id']]
+        with open(INVENTORY_FILE, 'w', newline='') as f:
+            writer = csv.DictWriter(f, fieldnames=INVENTORY_HEADER)
+            writer.writeheader()
+            writer.writerows(inventory)
+        with open(SOLD_FILE, 'a', newline='') as f:
+            writer = csv.DictWriter(f, fieldnames=['sold_id', 'bought_id', 'product_name', 'sell_date', 'sell_price'])
+            writer.writerows(sold_items)
+        with open(BOUGHT_FILE, 'w', newline='') as f:
+            writer = csv.DictWriter(f, fieldnames=['bought_id', 'product_name', 'buy_date', 'buy_price', 'expiration_date'])
+            writer.writeheader()
+            writer.writerows(bought_items)
+    else:
+        print(f"Not enough {product_name} in stock.")
+        
+    
+    

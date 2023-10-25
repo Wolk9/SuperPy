@@ -4,8 +4,7 @@ import datetime
 # function to get the set fictive day to work with
 
 
-def get_today():
-   
+def get_today(): 
     if not os.path.exists(TODAY_FILE):
         return datetime.date.today()
 

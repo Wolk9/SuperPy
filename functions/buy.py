@@ -2,7 +2,8 @@ import csv
 from functions.dates import get_today
 from core.constants import BOUGHT_FILE
 from functions.inventory import get_next_id
-
+from functions.inventory import update_inventory
+from functions.richtable import output_table
 
 # function to buy products. I have added the quantity function.
 # it checkes if the products with the same name and expiration date is already in the list.
@@ -23,3 +24,6 @@ def buy_product(product_name, price, expiration_date, quantity=1):
             writer = csv.writer(file)
             writer.writerow(row)
     print(f"Bought {quantity} {product_name}(s)")
+    output_table("bought");
+    update_inventory();
+    output_table("inventory");

@@ -2,7 +2,7 @@ import csv
 import datetime
 from core.constants import DATE_FORMAT, BOUGHT_FILE, SOLD_FILE, EXPIRED_FILE, INVENTORY_FILE, BOUGHT_HEADER, SOLD_HEADER, EXPIRED_HEADER, INVENTORY_HEADER, COSTS_FILE, COSTS_HEADER
 from functions.dates import get_today
-
+from functions.richtable import output_table
 
 def update_inventory():
     # Read the bought products from the CSV file
@@ -94,6 +94,8 @@ def update_inventory():
             writer.writerow(EXPIRED_HEADER)
             for product in expired:
                 writer.writerow(product)
+
+        
 
         # Ask the user if the expired products should be thrown away
         if trash and expired:
