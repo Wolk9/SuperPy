@@ -12,8 +12,8 @@ DATE_FORMAT = "%Y-%m-%d"
 
 BOUGHT_HEADER = ["bought_id", "product_name",
                  "buy_date", "buy_price", "expiration_date"]
-SOLD_HEADER = ["sold_id", "bought_id",
-               "product-name", "sell_date", "sell_price"]
+SOLD_HEADER = ["sold_id",
+               "product-name", "buy_date", "sell_date", "buy_price","sell_price"]
 EXPIRED_HEADER = ["bought_id", "product_name",
                   "buy_date", "buy_price", "expiration_date"]
 INVENTORY_HEADER = ["bought_id", "product_name",
