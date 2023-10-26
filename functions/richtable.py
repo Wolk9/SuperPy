@@ -1,8 +1,8 @@
-import random
 from rich.table import Table
 from rich.console import Console
 from core.constants import BOUGHT_HEADER, SOLD_HEADER, EXPIRED_HEADER, INVENTORY_HEADER, COSTS_HEADER
-from core.constants import BOUGHT_FILE, SOLD_FILE, EXPIRED_FILE, COSTS_FILE, INVENTORY_FILE
+from core.constants import BOUGHT_FILE, SOLD_FILE, EXPIRED_FILE, COSTS_FILE, INVENTORY_FILE, REVENUE_FILE
+from functions.dates import get_today
 
 def output_table(content_type):
     """
@@ -15,6 +15,7 @@ def output_table(content_type):
         None
     """
     # Determine headers and data_file based on content_type parameter
+    no_table = False
     if content_type == 'inventory':
         headers = INVENTORY_HEADER
         data_file = INVENTORY_FILE    
@@ -30,8 +31,19 @@ def output_table(content_type):
     elif content_type == 'expired':
         headers = EXPIRED_HEADER
         data_file = EXPIRED_FILE
+    elif content_type == 'revenue':
+        headers = ['Date', 'Revenue']
+        data_file = REVENUE_FILE
+        no_table = True
     else:
         raise ValueError('Invalid content type specified.')
+    
+    if no_table:
+        with open(data_file, 'r') as f:
+            next(f)
+            data = [line.strip().split(',') for line in f.readlines()]
+        title = f"\n{content_type.capitalize()} table for {get_today()}:"
+
     
     # Load data from CSV file
     with open(data_file, 'r') as f:
@@ -39,7 +51,7 @@ def output_table(content_type):
         data = [line.strip().split(',') for line in f.readlines()]
 
     # Create table object
-    title = f"\n{content_type.capitalize()} table"
+    title = f"\n{content_type.capitalize()} table for {get_today()}:"
     table = Table(title=title, show_header=True, header_style="bold magenta")
     for header in headers:
         if 'price' in header.lower():

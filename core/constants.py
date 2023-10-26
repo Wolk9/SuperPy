@@ -7,6 +7,7 @@ SOLD_FILE = os.path.join(DATA_DIR, "sold.csv")
 EXPIRED_FILE = os.path.join(DATA_DIR, "expired.csv")
 INVENTORY_FILE = os.path.join(DATA_DIR, "inventory.csv")
 COSTS_FILE = os.path.join(DATA_DIR, "costs.csv")
+REVENUE_FILE = os.path.join(DATA_DIR, "revenue.csv")
 
 DATE_FORMAT = "%Y-%m-%d"
 

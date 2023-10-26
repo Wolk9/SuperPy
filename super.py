@@ -39,18 +39,28 @@ def main():
 
     # the set_today function is added to the parser
     if args.command == "set_today":
-        set_today(datetime.datetime.strptime(args.date, "%Y-%m-%d").date())
+        if args.date:
+            set_today(datetime.datetime.strptime(args.date, "%Y-%m-%d").date())
+            date = get_today()
+        if args.now or args.today:
+           set_today(datetime.date.today())
+           date = get_today()
+        print(f'Today\'s fictive date is now set to {date}.')
         update_inventory()
-        output_table("inventory")
+       
     elif args.command == "get_today":
-        print(get_today())
+        date = get_today()
+        print(f'Today\'s fictive date is {date}.')
         update_inventory()
-        output_table("inventory")
+       
     # the advance_time function is added to the parser
     elif args.command == "advance_time":
+        print(f"Advancing time with {args.days} days...")
         advance_time(args.days)
+        date = get_today()
+        print(f'Today\'s fictive date is now set to {date}.')
         update_inventory()
-        output_table("inventory")
+       
     # the buy function is added to the parser
     elif args.command == "buy":
         update_inventory()
@@ -64,22 +74,36 @@ def main():
         output_table("sold")
     # the report function is added to the parser
     elif args.command == "report":
-        update_inventory()
-        report_date = get_report_date(args)
-
+        
         # Check which report type was given
 
         # the inventory report is added to the parser
         if args.report_type == "inventory":
+            report_date = get_report_date(args)
             if report_date:
                 print(f"Inventory report for {report_date}:")
-                get_inventory_report()
+                current_date = get_today()
+                set_today(report_date)
+                get_inventory_report(report_date)
+                set_today(current_date)
+            else: 
+                today = get_today()
+                print(f"Inventory report for {today}:")
+                get_inventory_report(today)
+        
+        # the expired report is added to the parser
+        if args.report_type == "expired":
+            today = get_today()
+            print(f"Expired products report for {today}:")
+            output_table("expired")
 
         # the revenue report is added to the parser
         elif args.report_type == "revenue":
+            report_date = get_report_date(args)
             if report_date:
                 revenue = get_revenue_report(report_date)
                 print(f"Revenue for {report_date}: {revenue}")
+                
 
         # the profit report is added to the parser
         elif args.report_type == "profit":
@@ -89,7 +113,11 @@ def main():
 
         else:
             parser.print_help()
-            
+    else: 
+        date = get_today()
+        print("We pretent today's date is", date)
+        update_inventory()
+        output_table("inventory")        
             
 
     

@@ -2,8 +2,9 @@ import argparse
 
 def create_parser():
     parser = argparse.ArgumentParser(
-        prog="SuperPy", description="Supermarket Inventory Management", epilog="Thanks for using SuperPy!")
-    subparsers = parser.add_subparsers(dest="command", title="commands")
+        prog="python super.py", description="Supermarket Inventory Management", epilog="Thanks for using SuperPy!")
+    subparsers = parser.add_subparsers(
+        dest="command", title="commands", help="No arguments displays an inventory table")
 
     # Get today command
     parser_get_today = subparsers.add_parser(
@@ -13,17 +14,20 @@ def create_parser():
     parser_set_today = subparsers.add_parser(
         "set_today", help="Set the current date")
     parser_set_today.add_argument(
-        "date", help="The date (YYYY-MM-DD) to set as today")
-
+        "date", nargs='?', default=None, help="The date (YYYY-MM-DD) to set as today")
+    parser_set_today.add_argument(
+        "--today", nargs='?', const=True, default=False, help="Set the real today as today")
+    parser_set_today.add_argument(
+        "--now", nargs='?', const=True, default=False, help="Set the real today as today")
 
     parser_advance_time = subparsers.add_parser(
-        "advance_time", help="Advance the current date")
+        "advance_time", help="Set the date forwards or backwards x days")
     parser_advance_time.add_argument(
-        "days", type=int, help="The number of days to advance")
+        "days", type=int, help="The number of days to advance (can be negative))")
 
-    parser_buy = subparsers.add_parser("buy", help="Buy a product")
+    parser_buy = subparsers.add_parser("buy", help="Buy a product or products")
     parser_buy.add_argument("-pn",
-        "--product-name", required=True, help="Name of the product")
+                            "--product-name", required=True, help="Name of the product (singular)")
     parser_buy.add_argument("-pr", "--price", type=float,
                             required=True, help="Price of the product")
     parser_buy.add_argument("-ed","--expiration-date", required=True,
@@ -31,7 +35,7 @@ def create_parser():
     parser_buy.add_argument("-q","--quantity", type=int, default=1,
                             help="Quantity of the product to buy (default is 1)")
 
-    parser_sell = subparsers.add_parser("sell", help="Sell a product")
+    parser_sell = subparsers.add_parser("sell", help="Sell a product or products")
     parser_sell.add_argument("-pn",
         "--product-name", required=True, help="Name of the product")
     parser_sell.add_argument("-pr",
@@ -50,6 +54,11 @@ def create_parser():
         "--now", action="store_true", help="Generate report for today")
     parser_report_inventory.add_argument(
         "--yesterday", action="store_true", help="Generate report for yesterday")
+    parser_report_inventory.add_argument(
+        "--date", help="Generate report for a specific date (YYYY-MM-DD)")
+    # Expired products report
+    parser_report_expired = subparsers_report.add_parser(
+        "expired", help="Generate now expired products report")
 
     # Revenue report
     parser_report_revenue = subparsers_report.add_parser(

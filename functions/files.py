@@ -2,7 +2,6 @@
 import os
 import csv
 import datetime
-from functions.dates import get_today
 from core.constants import DATE_FORMAT, DATA_DIR, TODAY_FILE, BOUGHT_FILE, SOLD_FILE, EXPIRED_FILE, INVENTORY_FILE, BOUGHT_HEADER, SOLD_HEADER, EXPIRED_HEADER, INVENTORY_HEADER, COSTS_FILE, COSTS_HEADER   
 
 
