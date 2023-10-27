@@ -8,7 +8,7 @@ from tabulate import tabulate
 from core.parser import create_parser
 from functions.files import create_data_files
 from functions.dates import get_today, set_today, advance_time
-from functions.reports import get_inventory_report, get_revenue_report, get_profit_report, get_report_date
+from functions.reports import get_inventory_report, get_revenue_report, get_profit_report
 from functions.inventory import update_inventory
 from functions.buy import buy_product
 from functions.sell import sell_product
@@ -104,63 +104,72 @@ def main():
         # the revenue report is added to the parser
         elif args.report_type == "revenue":
             today = get_today()
+            print(f"Revenue report per {today}:")
             if args.today:
-                print(f"Revenue report for {today}:")
                 get_revenue_report(today, "day")
-            if args.date:
-                report_date = datetime.datetime.strptime(args.date, "%Y-%m-%d").date()
-                print(f"Revenue report for {report_date}:")
+            if args.date or args.day:
+                if args.date:
+                    report_date = datetime.datetime.strptime(
+                        args.date, "%Y-%m-%d").date()
+                elif args.day:
+                    report_date = datetime.datetime.strptime(
+                        args.day, "%Y-%m-%d").date()
+                print(f"for {report_date}:")
                 current_date = get_today()
                 set_today(report_date)
                 get_revenue_report(report_date, "day")
                 set_today(current_date)
             if args.month:
                 report_date = datetime.datetime.strptime(args.month, "%Y-%m").date()
-                print(f"Revenue report for {report_date}:")
+                print(f"for month {report_date.month} of {report_date.year}:")
                 current_date = get_today()
                 set_today(report_date)
                 get_revenue_report(report_date, "month")
                 set_today(current_date)
             if args.year:
                 report_date = datetime.datetime.strptime(args.year, "%Y").date()
-                print(f"Revenue report for {report_date}:")
+                print(f"for {report_date.year}:")
                 current_date = get_today()
                 set_today(report_date)
                 get_revenue_report(report_date, "year")
                 set_today(current_date)
             if args.all:
-                print(f"Revenue report for all time:")
+                print(f"for all time:")
                 get_revenue_report(today, "all")
 
         # the profit report is added to the parser
         elif args.report_type == "profit":
             today = get_today()
+            print(f"Profit report for {today}:")
             if args.today:
-                print(f"Profit report for {today}:")
                 get_profit_report(today, "day")
-            if args.date:
-                report_date = datetime.datetime.strptime(args.date, "%Y-%m-%d").date()
-                print(f"Profit report for {report_date}:")
+            if args.date or args.day:
+                if args.date:
+                    report_date = datetime.datetime.strptime(
+                        args.date, "%Y-%m-%d").date()
+                elif args.day:
+                    report_date = datetime.datetime.strptime(args.day, "%Y-%m-%d").date()
+                print(f"for {report_date}:")
                 current_date = get_today()
                 set_today(report_date)
                 get_profit_report(report_date, "day")
                 set_today(current_date)
             if args.month:
                 report_date = datetime.datetime.strptime(args.month, "%Y-%m").date()
-                print(f"Profit report for {report_date}:")
+                print(f"for month {report_date.month} of {report_date.year}:")
                 current_date = get_today()
                 set_today(report_date)
                 get_profit_report(report_date, "month")
                 set_today(current_date)
             if args.year:
                 report_date = datetime.datetime.strptime(args.year, "%Y").date()
-                print(f"Profit report for {report_date}:")
+                print(f"for {report_date.year}:")
                 current_date = get_today()
                 set_today(report_date)
                 get_profit_report(report_date, "year")
                 set_today(current_date)
             if args.all:
-                print(f"Profit report for all time:")
+                print(f"for all time:")
                 get_profit_report(today, "all")
 
         else:

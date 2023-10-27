@@ -66,6 +66,8 @@ def create_parser():
     parser_report_revenue.add_argument(
         "--today", action="store_true", help="Generate report for today")
     parser_report_revenue.add_argument(
+        "--day", type=str, help="Generate report for a specific date (YYYY-MM-DD)")
+    parser_report_revenue.add_argument(
         "--date", type=str, help="Generate report for a specific date (YYYY-MM-DD)")
     parser_report_revenue.add_argument(
         "--month", type=str, help="Generate report for a specific month (YYYY-MM)")
@@ -79,6 +81,8 @@ def create_parser():
         "profit", help="Generate profit report")
     parser_report_profit.add_argument(
         "--today", action="store_true", help="Generate report for today")
+    parser_report_profit.add_argument(
+        "--day", type=str, help="Generate report for a specific date (YYYY-MM-DD)")
     parser_report_profit.add_argument(
         "--date", type=str, help="Generate report for a specific date (YYYY-MM-DD)")
     parser_report_profit.add_argument(

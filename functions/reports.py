@@ -6,36 +6,6 @@ from functions.richtable import output_table
 from core.constants import REVENUE_FILE, INVENTORY_FILE, COSTS_FILE, BOUGHT_FILE, SOLD_FILE, EXPIRED_FILE, PROFIT_FILE
 from core.constants import REVENUE_HEADER, INVENTORY_HEADER, COSTS_HEADER, BOUGHT_HEADER, SOLD_HEADER, EXPIRED_HEADER, PROFIT_HEADER
 
-# function to get the date from the parser to generate the report with.
-
-
-def get_report_date(args):
-    today = get_today()
-    if args.report_type == "inventory":
-        print("I see the arg is inventory")
-        if args.now:
-            return today
-        elif args.yesterday:
-            date = today - datetime.timedelta(days=1)
-            return date
-        elif args.date:
-            return datetime.datetime.strptime(args.date, "%Y-%m-%d").date()
-    elif args.report_type == "revenue" or args.report_type == "profit":
-        print("I see the arg is revenue or profit")
-        if args.today:
-            return today
-        elif args.date:
-            return datetime.datetime.strptime(args.date, "%Y-%m-%d").date()
-        elif args.month:
-            return datetime.datetime.strptime(args.month, "%Y-%m").date()
-        elif args.year:
-            return datetime.datetime.strptime(args.year, "%Y").date()
-        elif args.all:
-            return "all"
-
-    return None
-
-
 def get_inventory_report(date):
     set_today(date)
     update_inventory()
@@ -43,10 +13,8 @@ def get_inventory_report(date):
 
     return None
 
-
 def get_profit_report(date, report_type):
-    # lodad data from CSV file
-    print("I'm in the get_profit_report function with:", date, report_type)
+    # load data from CSV file
 
     with open(SOLD_FILE, "r") as sold_file:
         next(sold_file)
@@ -65,9 +33,9 @@ def get_profit_report(date, report_type):
         profit_record = [date, amount]
         filtered_data.append(profit_record)
 
-        print(filtered_data)
-
         write_profit_data(filtered_data, total=0)
+        set_today(date)
+        output_table("profit", "Day")
 
     elif report_type == "month":
         # filter all records of the month from the sold file
@@ -80,23 +48,24 @@ def get_profit_report(date, report_type):
         total = 0
         for record in sold_data:
             record_date = datetime.strptime(record[3], "%Y-%m-%d").date()
-            if record_date.month == date.month:
-                if record_date not in days:
-                    profit = 0
-                    for record2 in sold_data:
-                        record2_date = datetime.strptime(
-                            record2[3], "%Y-%m-%d").date()
-                        if record2_date.day == record_date.day and record2_date.month == record_date.month and record2_date.year == record_date.year:
-                            profit = profit + \
-                                (float(record2[5]) - float(record2[4]))
-                amount = f"€ {round(profit, 2):.2f}"
-                days.append(record_date)
-        profit_record = [record_date, amount]
-        filtered_data.append(profit_record)
-        total += profit
+            if record_date.year == date.year:
+                if record_date.month == date.month:
+                    if record_date not in days:
+                        profit = 0
+                        for record2 in sold_data:
+                            record2_date = datetime.strptime(
+                                record2[3], "%Y-%m-%d").date()
+                            if record2_date.day == record_date.day and record2_date.month == record_date.month and record2_date.year == record_date.year:
+                                profit += float(record2[5]) - float(record2[4])
+                        amount = f"€ {round(profit, 2):.2f}"
+                        days.append(record_date)
+                        profit_record = [record_date, amount]
+                        filtered_data.append(profit_record)
+                        total += profit
         total_valuta = f"€ {round(total, 2):.2f}"
-        print(filtered_data)
         write_profit_data(filtered_data, total_valuta)
+        set_today(date)
+        output_table("profit", "Month")
 
     elif report_type == "year":
         # filter all records of the year from the profit file
@@ -125,8 +94,9 @@ def get_profit_report(date, report_type):
                     filtered_data.append(profit_record)
                     total += profit
         total_valuta = f"€ {round(total, 2):.2f}"
-        print(filtered_data)
         write_profit_data(filtered_data, total_valuta)
+        set_today(date)
+        output_table("profit", "Year")
 
     elif report_type == "all":
         # take all records profit file
@@ -152,23 +122,21 @@ def get_profit_report(date, report_type):
             total += profit
 
         total_valuta = f"€ {round(total, 2):.2f}"
-        print(filtered_data)
         write_profit_data(filtered_data, total_valuta)
+        set_today(date)
+        output_table("profit", "Alltime")
 
-    set_today(date)
     update_inventory()
-
-    output_table("profit")
+    
+    
 
 
 def get_revenue_report(date, report_type):
     # lodad data from CSV file
-    print("I'm in the get_revenue_report function with:", date, report_type)
-
     with open(SOLD_FILE, "r") as sold_file:
         next(sold_file)
         sold_data = [line.strip().split(",") for line in sold_file.readlines()]
-    print(sold_data)
+
 
     if report_type == "day":
         # filter all records of the day from the sold file
@@ -186,9 +154,9 @@ def get_revenue_report(date, report_type):
         revenue_record = [date, amount]
         filtered_data.append(revenue_record)
 
-        print(filtered_data)
-
-        write_revenue_data(filtered_data, total_valuta)
+        write_revenue_data(filtered_data, total=0)
+        set_today(date)
+        output_table("revenue", "Day")
 
     elif report_type == "month":
         # filter all records of the given month from the sold file
@@ -201,22 +169,24 @@ def get_revenue_report(date, report_type):
         total = 0
         for record in sold_data:
             record_date = datetime.strptime(record[3], "%Y-%m-%d").date()
-            if record_date.month == date.month:
-                if record_date not in days:
-                    revenue = 0
-                    for record2 in sold_data:
-                        record2_date = datetime.strptime(
-                            record2[3], "%Y-%m-%d").date()
-                        if record2_date.day == record_date.day and record2_date.month == record_date.month and record2_date.year == record_date.year:
-                            revenue += float(record2[5])
-                amount = f"€ {round(revenue, 2):.2f}"
-                days.append(record_date)
-        revenue_record = [record_date, amount]
-        filtered_data.append(revenue_record)
-        total += revenue
+            if record_date.year == date.year:
+                if record_date.month == date.month:
+                    if record_date not in days:
+                        revenue = 0
+                        for record2 in sold_data:
+                            record2_date = datetime.strptime(
+                                record2[3], "%Y-%m-%d").date()
+                            if record2_date.day == record_date.day and record2_date.month == record_date.month and record2_date.year == record_date.year:
+                                revenue += float(record2[5])
+                        amount = f"€ {round(revenue, 2):.2f}"
+                        days.append(record_date)
+                        revenue_record = [record_date, amount]
+                        filtered_data.append(revenue_record)
+                        total += revenue
         total_valuta = f"€ {round(total, 2):.2f}"
-        print(filtered_data)
         write_revenue_data(filtered_data, total_valuta)
+        set_today(date)
+        output_table("revenue", "Month")
 
     elif report_type == "year":
         # filter all records of the year from the sold file
@@ -244,8 +214,9 @@ def get_revenue_report(date, report_type):
                     filtered_data.append(revenue_record)
                     total += revenue
         total_valuta = f"€ {round(total, 2):.2f}"
-        print(filtered_data)
         write_revenue_data(filtered_data, total_valuta)
+        set_today(date)
+        output_table("revenue", "Year")
 
     elif report_type == "all":
         # take all records revenue file
@@ -271,13 +242,11 @@ def get_revenue_report(date, report_type):
             total += revenue
 
         total_valuta = f"€ {round(total, 2):.2f}"
-        print(filtered_data)
         write_revenue_data(filtered_data, total_valuta)
+        set_today(date)
+        output_table("revenue", "Alltime")
 
-    set_today(date)
     update_inventory()
-
-    output_table("revenue")
 
 
 def write_profit_data(filtered_data, total=0):

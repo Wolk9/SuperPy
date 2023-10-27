@@ -4,7 +4,8 @@ from core.constants import BOUGHT_HEADER, SOLD_HEADER, EXPIRED_HEADER, INVENTORY
 from core.constants import BOUGHT_FILE, SOLD_FILE, EXPIRED_FILE, COSTS_FILE, INVENTORY_FILE, REVENUE_FILE, PROFIT_FILE
 from functions.dates import get_today
 
-def output_table(content_type):
+def output_table(content_type, selection=None):
+
     """
     Outputs a table to the CLI using the rich.table library.
 
@@ -32,7 +33,7 @@ def output_table(content_type):
         data_file = EXPIRED_FILE
     elif content_type == 'revenue':
         headers = REVENUE_HEADER
-        data_file = REVENUE_FILE
+        data_file = REVENUE_FILE            
     elif content_type == 'profit':
         headers = PROFIT_HEADER
         data_file = PROFIT_FILE
@@ -51,12 +52,10 @@ def output_table(content_type):
                 data = data[:-1]
 
     # Create table object
-    title = f"\n{content_type.capitalize()} table for {get_today()}:"
-    # if footer:
-    #     print("I'm in the richtable function and I see a total row")
-    #     table = Table(title=title, show_header=True, header_style="bold magenta",
-    #                   show_footer=True, footer_style="bold magenta")
-    # else:
+    if selection is not None:
+        title = f"\n {selection.capitalize()} {content_type.capitalize()} table:"
+    else:
+        title = f"\n {content_type.capitalize()} table:"
     table = Table(title=title, show_header=True,
                       header_style="bold magenta")
 
