@@ -1,20 +1,16 @@
+# Import required modules
 from rich.table import Table
 from rich.console import Console
+# Import from core folder
 from core.constants import BOUGHT_HEADER, SOLD_HEADER, EXPIRED_HEADER, INVENTORY_HEADER, COSTS_HEADER, REVENUE_HEADER, PROFIT_HEADER
 from core.constants import BOUGHT_FILE, SOLD_FILE, EXPIRED_FILE, COSTS_FILE, INVENTORY_FILE, REVENUE_FILE, PROFIT_FILE
+# Import from functions folder
 from functions.dates import get_today
+
+# This function outputs a table to the CLI
 
 def output_table(content_type, selection=None):
 
-    """
-    Outputs a table to the CLI using the rich.table library.
-
-    Args:
-        content_type (str): The type of content to output.
-
-    Returns:
-        None
-    """
     # Determine headers and data_file based on content_type parameter
     if content_type == 'inventory':
         headers = INVENTORY_HEADER

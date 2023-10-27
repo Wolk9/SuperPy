@@ -1,18 +1,16 @@
+# Import from standard library
 import csv
 import datetime
+# Import from functions folder
 from functions.dates import get_today
-from functions.inventory import get_next_id
+# Import from core folder
 from core.constants import INVENTORY_FILE, SOLD_FILE, INVENTORY_HEADER, BOUGHT_FILE
 
-# function to sell products that are on stock and not expired.
-# In the INVENTORY_FILE there are separate records for each single product.
-# In the INVENTORY_FILE each product has a unique bought_id, a product_name, a buy_date, a buy_price and an expiration_date.    
-# to sell a product it first should check how many products are in stock with the same name and are not expired.
-# if there are enough products in stock, it sells the product and adds a single record for each single sold product to the sold file.
-# in addition the record with the correspondent bought_id should be removed from the bought file.
-# the sold file contains records with a unique sold_id, a bought_id, a product_name, a sell_date and a sell_price.
-# the BOUGHT_FILE contains records with a unique bought_id, a product_name, a buy_date, a buy_price and an expiration_date.
-# if there are not enough products in stock, it gives a message that there are not enough products in stock and prompts the user if they would like to sell the rest of the stock available.
+# This function is used to sell products.
+# It checks if there are enough products in stock and if so, it updates the inventory and sold files.
+# If there are not enough products in stock, it asks the user if he/she wants to sell the remaining products.
+# If the user answers yes, the remaining products are sold.
+# If the user answers no, the sale is cancelled.
 
 def sell_product(product_name, price, quantity=1):
     

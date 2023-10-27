@@ -1,9 +1,12 @@
+# Import from libraries
 import csv
+# Import from functions folder
 from functions.dates import get_today
-from core.constants import BOUGHT_FILE
 from functions.inventory import get_next_id
 from functions.inventory import update_inventory
 from functions.richtable import output_table
+# Import from core folder
+from core.constants import BOUGHT_FILE
 
 # function to buy products. I have added the quantity function.
 # it checkes if the products with the same name and expiration date is already in the list.

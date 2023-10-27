@@ -1,12 +1,11 @@
-# code to create the data files at first
 import os
 import csv
 import datetime
 from core.constants import DATA_DIR, TODAY_FILE
-from core.constants import REVENUE_FILE, INVENTORY_FILE, COSTS_FILE, BOUGHT_FILE, SOLD_FILE, EXPIRED_FILE, PROFIT_FILE
-from core.constants import REVENUE_HEADER, INVENTORY_HEADER, COSTS_HEADER, BOUGHT_HEADER, SOLD_HEADER, EXPIRED_HEADER, PROFIT_HEADER
+from core.constants import REVENUE_FILE, INVENTORY_FILE, BOUGHT_FILE, SOLD_FILE, EXPIRED_FILE, PROFIT_FILE
+from core.constants import REVENUE_HEADER, INVENTORY_HEADER, BOUGHT_HEADER, SOLD_HEADER, EXPIRED_HEADER, PROFIT_HEADER
 
-
+# Create data files if they don't exist
 
 def create_data_files():
     if not os.path.exists(DATA_DIR):
@@ -38,11 +37,6 @@ def create_data_files():
         with open(INVENTORY_FILE, "w", newline="") as f:
             writer = csv.writer(f)
             writer.writerow(INVENTORY_HEADER)
-    
-    if not os.path.exists(COSTS_FILE):
-        with open(COSTS_FILE, "w", newline="") as f:
-            writer = csv.writer(f)
-            writer.writerow(COSTS_HEADER)
 
     if not os.path.exists(REVENUE_FILE):
         with open(REVENUE_FILE, "w", newline="") as f:

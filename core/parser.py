@@ -1,5 +1,6 @@
 import argparse
 
+# This file contains the parser for the command line arguments
 def create_parser():
     parser = argparse.ArgumentParser(
         prog="python super.py", description="Supermarket Inventory Management", epilog="Thanks for using SuperPy!")
@@ -7,8 +8,8 @@ def create_parser():
         dest="command", title="commands", help="No arguments displays an inventory table")
 
     # Get today command
-    parser_get_today = subparsers.add_parser(
-        "get_today", help="Get the current date")
+    subparsers.add_parser(
+        "get_today", help="Get the current date")     
     
     # Set today command
     parser_set_today = subparsers.add_parser(
@@ -57,8 +58,15 @@ def create_parser():
     parser_report_inventory.add_argument(
         "--date", help="Generate report for a specific date (YYYY-MM-DD)")
     # Expired products report
+    
     parser_report_expired = subparsers_report.add_parser(
         "expired", help="Generate now expired products report")
+    parser_report_expired.add_argument(
+        "--now", action="store_true", default=True, help="Generate report for today")
+    parser_report_expired.add_argument(
+        "--yesterday", action="store_true", help="Generate report for yesterday")
+    parser_report_expired.add_argument(
+        "--date", help="Generate report for a specific date (YYYY-MM-DD)")
 
     # Revenue report
     parser_report_revenue = subparsers_report.add_parser(

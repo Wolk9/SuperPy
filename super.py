@@ -1,14 +1,13 @@
-# Imports
-import argparse
-import csv
+# Imports from python library
 import datetime
-import os
+# Imports from rich library
 from rich import print
-from tabulate import tabulate
+# Imports from core folder
 from core.parser import create_parser
+# Imports from functions folder
 from functions.files import create_data_files
 from functions.dates import get_today, set_today, advance_time
-from functions.reports import get_inventory_report, get_revenue_report, get_profit_report
+from functions.reports import get_inventory_report, get_expired_report, get_revenue_report, get_profit_report
 from functions.inventory import update_inventory
 from functions.buy import buy_product
 from functions.sell import sell_product
@@ -20,19 +19,11 @@ __human_name__ = "superpy"
 
 # Your code below this line.
 
-DATA_DIR = os.path.join(os.getcwd(), "data")
-TODAY_FILE = os.path.join(DATA_DIR, "today.txt")
-BOUGHT_FILE = os.path.join(DATA_DIR, "bought.csv")
-SOLD_FILE = os.path.join(DATA_DIR, "sold.csv")
-EXPIRED_FILE = os.path.join(DATA_DIR, "expired.csv")
-
 def main():
     create_data_files()
     
     args = create_parser()
     
-    # parser = argparse.ArgumentParser()
-
     # Check which command was given
     # and call the corresponding function
     # with the given arguments
@@ -48,6 +39,7 @@ def main():
         print(f'Today\'s fictive date is now set to {date}.')
         update_inventory()
        
+    # the get_today function is added to the parser
     elif args.command == "get_today":
         date = get_today()
         print(f'Today\'s fictive date is {date}.')
@@ -67,40 +59,52 @@ def main():
         buy_product(args.product_name, args.price,
                     args.expiration_date, args.quantity)
         output_table("bought")
+        
     # the sell function is added to the parser
     elif args.command == "sell":
         update_inventory()
         sell_product(args.product_name, args.price, args.quantity)
         output_table("sold")
+        
     # the report function is added to the parser
     elif args.command == "report":
-        
         # Check which report type was given
-
         # the inventory report is added to the parser
         if args.report_type == "inventory":
             today = get_today()
             if args.now:
                 print(f"Inventory report for {today}:")
-                get_inventory_report(today)
+                get_inventory_report(today, "inventory")
             if args.yesterday:
                 yesterday = today - datetime.timedelta(days=1)
                 print(f"Inventory report for {yesterday}:")
-                get_inventory_report(yesterday)
+                get_inventory_report(yesterday, "inventory")
             if args.date:
                 report_date = datetime.datetime.strptime(args.date, "%Y-%m-%d").date()
                 print(f"Inventory report for {report_date}:")
                 current_date = get_today()
                 set_today(report_date)
-                get_inventory_report(report_date)
+                get_inventory_report(report_date, "inventory")
                 set_today(current_date)
             
         # the expired report is added to the parser
-        if args.report_type == "expired":
+        elif args.report_type == "expired":
             today = get_today()
-            print(f"Expired products report for {today}:")
-            output_table("expired")
-
+            if args.now:
+                print(f"Expired products report for {today}:")
+                get_expired_report(today, "expired")
+            if args.yesterday:
+                yesterday = today - datetime.timedelta(days=1)
+                print(f"Expired products report for {yesterday}:")
+                get_expired_report(yesterday, "expired") 
+            if args.date:
+                report_date = datetime.datetime.strptime(args.date, "%Y-%m-%d").date()
+                print(f"Expired products report for {report_date}:")
+                current_date = get_today()
+                set_today(report_date)
+                get_expired_report(report_date, "expired")
+                set_today(current_date)
+            
         # the revenue report is added to the parser
         elif args.report_type == "revenue":
             today = get_today()
@@ -179,23 +183,6 @@ def main():
         print("We pretent today's date is", date)
         update_inventory()
         output_table("inventory")        
-            
-
-    
-
-
-
-def delete_bought_product(product_id):
-    with open(BOUGHT_FILE, "r", newline="") as f:
-        reader = csv.reader(f)
-        rows = list(reader)
-
-    with open(BOUGHT_FILE, "w", newline="") as f:
-        writer = csv.writer(f)
-        writer.writerow(rows[0])
-        for row in rows[1:]:
-            if row[0] != product_id:
-                writer.writerow(row)
 
 
 if __name__ == "__main__":

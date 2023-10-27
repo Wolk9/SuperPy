@@ -1,6 +1,9 @@
+# Import from python standard library
 import os
-from core.constants import TODAY_FILE
 import datetime
+# Import from core folder
+from core.constants import TODAY_FILE
+
 
 # function to get the fictive date set to work with
 def get_today(): 

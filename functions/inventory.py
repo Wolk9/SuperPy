@@ -1,8 +1,11 @@
 import csv
 import datetime
-from core.constants import DATE_FORMAT, BOUGHT_FILE, SOLD_FILE, EXPIRED_FILE, INVENTORY_FILE, BOUGHT_HEADER, SOLD_HEADER, EXPIRED_HEADER, INVENTORY_HEADER, COSTS_FILE, COSTS_HEADER
+from core.constants import DATE_FORMAT, BOUGHT_FILE, EXPIRED_FILE, INVENTORY_FILE,  EXPIRED_HEADER, INVENTORY_HEADER
 from functions.dates import get_today
-from functions.richtable import output_table
+
+# This is the core of the data management. The inventory is updated after each action. 
+# With the date of today, the inventory is checked for expired products.
+# The inventory is updated with the products that are not expired and the expired products are written to a separate file.
 
 def update_inventory():
     # Read the bought products from the CSV file
@@ -49,7 +52,7 @@ def update_inventory():
         for product in expired:
             writer.writerow(product)
 
-
+# This function is used to get the next ID for a new record of a CSV file.
 def get_next_id(file_path):
     with open(file_path, "r") as file:
         reader = csv.reader(file)

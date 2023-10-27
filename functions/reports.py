@@ -1,21 +1,30 @@
+# imports from python library
 import csv
 from datetime import datetime
-from functions.dates import get_today, set_today
+# imports from functions folder
+from functions.dates import set_today
 from functions.inventory import update_inventory
 from functions.richtable import output_table
-from core.constants import REVENUE_FILE, INVENTORY_FILE, COSTS_FILE, BOUGHT_FILE, SOLD_FILE, EXPIRED_FILE, PROFIT_FILE
-from core.constants import REVENUE_HEADER, INVENTORY_HEADER, COSTS_HEADER, BOUGHT_HEADER, SOLD_HEADER, EXPIRED_HEADER, PROFIT_HEADER
+# imports from core folder
+from core.constants import REVENUE_FILE, SOLD_FILE, PROFIT_FILE
+from core.constants import REVENUE_HEADER, PROFIT_HEADER
 
-def get_inventory_report(date):
+# This file contains all functions that are used to generate the reports.
+
+def get_inventory_report(date, report_type):
     set_today(date)
     update_inventory()
     output_table("inventory")
+    return None
 
+def get_expired_report(date, report_type):
+    set_today(date)
+    update_inventory()
+    output_table("expired")
     return None
 
 def get_profit_report(date, report_type):
     # load data from CSV file
-
     with open(SOLD_FILE, "r") as sold_file:
         next(sold_file)
         sold_data = [line.strip().split(",") for line in sold_file.readlines()]
@@ -128,8 +137,6 @@ def get_profit_report(date, report_type):
 
     update_inventory()
     
-    
-
 
 def get_revenue_report(date, report_type):
     # lodad data from CSV file
@@ -248,7 +255,7 @@ def get_revenue_report(date, report_type):
 
     update_inventory()
 
-
+# This function is used to write the profit data to the CSV file.
 def write_profit_data(filtered_data, total=0):
     with open(PROFIT_FILE, "w", newline="") as file:
         writer = csv.writer(file)
@@ -258,7 +265,7 @@ def write_profit_data(filtered_data, total=0):
         if total != 0:
             writer.writerow(["Total", total])
 
-
+# This function is used to write the revenue data to the CSV file.
 def write_revenue_data(filtered_data, total=0):
     with open(REVENUE_FILE, "w", newline="") as file:
         writer = csv.writer(file)

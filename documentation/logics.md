@@ -83,6 +83,7 @@ graph TB;
         ProfitReport(Profit\nReport)
 
         Reports --- InventoryReport
+        Reports --- ExpiredReport
         Reports --- RevenueReport
         Reports --- ProfitReport
 
@@ -98,6 +99,14 @@ graph TB;
         Inventory_CLIReport>CLI Report]
         Inventory_CSVReport>CSV Report]
 
+        ExpiredProducts <-.- ExpiredReport
+
+        ExpiredReport --> Expired_CLIReport
+        ExpiredReport --> Expired_CSVReport
+
+        Expired_CLIReport>CLI Report]
+        Expired_CSVReport>CSV Report]
+
         Sold -.-> CalculateProfit
 
         CalculateProfit --> ProfitReport
@@ -112,7 +121,6 @@ graph TB;
 
         Sold -.-> CalculateRevenue
         BoughtProducts -.-> CalculateRevenue
-        ExpiredProducts -.-> CalculateRevenue
 
         CalculateRevenue -.-> RevenueReport
 

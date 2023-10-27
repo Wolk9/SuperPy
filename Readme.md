@@ -29,6 +29,8 @@ SuperPy is a command-line based inventory management tool designed to keep track
 
    python super.py advance_time <number_of_days>
 
+   > _this can be a negative number to go back in time_
+
 4. **Buy a Product**
 
    python super.py buy --product-name "Product Name" --price <buy_price> --expiration-date YYYY-MM-DD --quantity 5
@@ -39,34 +41,42 @@ SuperPy is a command-line based inventory management tool designed to keep track
 
    python super.py sell --product-name "Product Name" --price <sell_price> --quantity 5
 
-   Only not expired products will be sold.
+   The --quantity allows you to specify the quantity of the product to sell.
 
-   The --quantity option allows you to specify the quantity of the product to sell (default is 1).
+   > If the quantity is not sufficient, the program will ask if you would like to sell the rest
 
-6. **Toss all expired products**
 
-   python super.py toss --expired
+6. **Generate Reports**:
+   - **Inventory Report**
+     python super.py report inventory
+     - --now           Generate report for today 
+     - --yesterday     Generate report for yesterday
+     - --date DAY      Generate report for specific date (YYYY-MM-DD)
+   - **Expired Report**
+     A report with all the expired products on the specified date
+     - --now           Generate report for today 
+     - --yesterday     Generate report for yesterday
+     - --date DAY      Generate report for specific date (YYYY-MM-DD)
+   - **Revenue Report**:
+     python super.py report revenue
+      - --today        Generate report for today
+      - --day DAY      Generate report for a specific date (YYYY-MM-DD)
+      - --date DATE    Generate report for a specific date (YYYY-MM-DD)
+      - --month MONTH  Generate report for a specific month (YYYY-MM)
+      - --year YEAR    Generate report for a specific year (YYYY)
+      - --all          Generate report for all time
+   - **Profit Report**:
+     python super.py report profit
+      - --today        Generate report for today
+      - --day DAY      Generate report for a specific date (YYYY-MM-DD)
+      - --date DATE    Generate report for a specific date (YYYY-MM-DD)
+      - --month MONTH  Generate report for a specific month (YYYY-MM)
+      - --year YEAR    Generate report for a specific year (YYYY)
+      - --all          Generate report for all time
 
-7. **Toss all products**
-
-   python super.py toss --all
-
-9. **Generate Reports**:
-   - **Inventory Report for Today**:
-     python super.py report inventory --now
-   - **Inventory Report for Yesterday**:
-     python super.py report inventory --yesterday
-   - **Revenue Report for Today**:
-     python super.py report revenue --today
-   - **Revenue Report for a Specific Date**:
-     python super.py report revenue --date YYYY-MM-DD
-   - **Profit Report for Today**:
-     python super.py report profit --today
-   - **Profit Report for a Specific Date**:
-     python super.py report profit --date YYYY-MM-DD
-
-  The inventory report is created in CSV format with the name inventory_report.csv and displayed 
-  with tabulate to the commandline.
+  
+  
+  The reports are created in CSV format with the respectivly name and displayed with _rich_ to the commandline.
 
 ## Data Storage
 
@@ -76,8 +86,12 @@ All transaction data is stored in CSV files located in the `data` directory:
 - `sold.csv`: Contains details about products sold.
 - `inventory.csv`: Contains details about the not expired products.
 - `expired.csv`: Contains details about expired products.
-- `costs.csv`: Contains details about costs, like thrown away products (after expiring).
+
+The program makes use of temporary CSV files to generate reports:
+- `revenue.csv`: Contains the calculated revenue information
+- `profit.csv`: Contains the calculated profit information
 
 ## Student Author
-
 Martin de Bes
+
+Date of submition for review: 27-10-2023

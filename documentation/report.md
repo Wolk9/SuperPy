@@ -18,11 +18,13 @@ Schematische weergave van de code:
 graph TB;
     
     Begin("Start")
-    Begin ----> BasicStart
-    Begin ----> Date
     Begin --> StartBuy
+    Begin ---> Date
+    Begin --> BasicStart
     Begin --> StartSell
-    Begin ----> Reports
+
+   
+    
 
     subgraph Date functions
         Date -.- GetToday
@@ -32,7 +34,7 @@ graph TB;
     subgraph Core Functionality
         direction TB
        
-        BasicStart ====> GetInventory
+        BasicStart ==> GetInventory
 
         GetInventory("GetInventory()")
         
@@ -40,7 +42,7 @@ graph TB;
 
         GetInventory ==> Expired
 
-        GetToday("Get_Today()") <-...- Expired
+        GetToday("Get_Today()") <-.- Expired
 
         Expired --->|yes| ExpiredProducts
         Expired -->|no| Inventory
@@ -96,6 +98,7 @@ graph TB;
         ProfitReport(Profit\nReport)
 
         Reports --- InventoryReport
+        Reports --- ExpiredReport
         Reports --- RevenueReport
         Reports --- ProfitReport
 
@@ -111,6 +114,14 @@ graph TB;
         Inventory_CLIReport>CLI Report]
         Inventory_CSVReport>CSV Report]
 
+        ExpiredProducts <-.- ExpiredReport
+
+        ExpiredReport --> Expired_CLIReport
+        ExpiredReport --> Expired_CSVReport
+
+        Expired_CLIReport>CLI Report]
+        Expired_CSVReport>CSV Report]
+
         Sold -.-> CalculateProfit
 
         CalculateProfit --> ProfitReport
@@ -125,7 +136,6 @@ graph TB;
 
         Sold -.-> CalculateRevenue
         BoughtProducts -.-> CalculateRevenue
-        ExpiredProducts -.-> CalculateRevenue
 
         CalculateRevenue -.-> RevenueReport
 
@@ -134,10 +144,12 @@ graph TB;
 
         Revenue_CLIReport>CLI Report]
         Revenue_CSVReport>CSV Report]
+
+
       
     end
-
 ```
+
 
 
 
