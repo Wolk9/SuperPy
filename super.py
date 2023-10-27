@@ -104,7 +104,7 @@ def main():
         # the revenue report is added to the parser
         elif args.report_type == "revenue":
             today = get_today()
-            print(f"Revenue report per {today}:")
+            print(f"\nRevenue report per {today}:")
             if args.today:
                 get_revenue_report(today, "day")
             if args.date or args.day:
@@ -140,7 +140,7 @@ def main():
         # the profit report is added to the parser
         elif args.report_type == "profit":
             today = get_today()
-            print(f"Profit report for {today}:")
+            print(f"\nProfit report for {today}:")
             if args.today:
                 get_profit_report(today, "day")
             if args.date or args.day:

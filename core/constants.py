@@ -23,6 +23,6 @@ INVENTORY_HEADER = ["bought_id", "product_name",
                     "buy_date", "buy_price", "expiration_date"]
 COSTS_HEADER = ["cost_id", "number_of_products", "cost_date", "total_cost"]  
 
-REVENUE_HEADER = ["Periode", "Revenue"]
+REVENUE_HEADER = ["Period", "Revenue"]
 
-PROFIT_HEADER = ["Periode", "Profit"]
+PROFIT_HEADER = ["Period", "Profit"]
