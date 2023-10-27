@@ -63,23 +63,31 @@ def create_parser():
     # Revenue report
     parser_report_revenue = subparsers_report.add_parser(
         "revenue", help="Generate revenue report")
-    group_revenue = parser_report_revenue.add_mutually_exclusive_group(
-        required=True)
-    group_revenue.add_argument(
+    parser_report_revenue.add_argument(
         "--today", action="store_true", help="Generate report for today")
-    group_revenue.add_argument(
-        "--date", help="Generate report for a specific date (YYYY-MM-DD)")
-
-    # Profit report
+    parser_report_revenue.add_argument(
+        "--date", type=str, help="Generate report for a specific date (YYYY-MM-DD)")
+    parser_report_revenue.add_argument(
+        "--month", type=str, help="Generate report for a specific month (YYYY-MM)")
+    parser_report_revenue.add_argument(
+        "--year", type=str, help="Generate report for a specific year (YYYY)")
+    parser_report_revenue.add_argument(
+        "--all", action="store_true", help="Generate report for all time")
+    
+    # profit report
     parser_report_profit = subparsers_report.add_parser(
         "profit", help="Generate profit report")
-    group_profit = parser_report_profit.add_mutually_exclusive_group(
-        required=True)
-    group_profit.add_argument(
+    parser_report_profit.add_argument(
         "--today", action="store_true", help="Generate report for today")
-    group_profit.add_argument(
-        "--date", help="Generate report for a specific date (YYYY-MM-DD)")
+    parser_report_profit.add_argument(
+        "--date", type=str, help="Generate report for a specific date (YYYY-MM-DD)")
+    parser_report_profit.add_argument(
+        "--month", type=str, help="Generate report for a specific month (YYYY-MM)")
+    parser_report_profit.add_argument(
+        "--year", type=str, help="Generate report for a specific year (YYYY)")
+    parser_report_profit.add_argument(
+        "--all", action="store_true", help="Generate report for all time")
 
     args = parser.parse_args()
-
+    
     return args

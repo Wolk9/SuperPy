@@ -2,13 +2,21 @@
 import os
 import csv
 import datetime
-from core.constants import DATE_FORMAT, DATA_DIR, TODAY_FILE, BOUGHT_FILE, SOLD_FILE, EXPIRED_FILE, INVENTORY_FILE, BOUGHT_HEADER, SOLD_HEADER, EXPIRED_HEADER, INVENTORY_HEADER, COSTS_FILE, COSTS_HEADER   
+from core.constants import DATA_DIR, TODAY_FILE
+from core.constants import REVENUE_FILE, INVENTORY_FILE, COSTS_FILE, BOUGHT_FILE, SOLD_FILE, EXPIRED_FILE, PROFIT_FILE
+from core.constants import REVENUE_HEADER, INVENTORY_HEADER, COSTS_HEADER, BOUGHT_HEADER, SOLD_HEADER, EXPIRED_HEADER, PROFIT_HEADER
 
 
 
 def create_data_files():
     if not os.path.exists(DATA_DIR):
         os.makedirs(DATA_DIR)
+        
+    # Create today.txt if it doesn't exist
+    if not os.path.exists(TODAY_FILE):
+        with open(TODAY_FILE, "w") as f:
+            today = datetime.date.today().strftime("%Y-%m-%d")
+            f.write(today)
 
     # Create initial CSVs with headers if they don't exist
     if not os.path.exists(BOUGHT_FILE):
@@ -36,11 +44,17 @@ def create_data_files():
             writer = csv.writer(f)
             writer.writerow(COSTS_HEADER)
 
-    # Create today.txt if it doesn't exist
-    if not os.path.exists(TODAY_FILE):
-        with open(TODAY_FILE, "w") as f:
-            today = datetime.date.today().strftime("%Y-%m-%d")
-            f.write(today)
+    if not os.path.exists(REVENUE_FILE):
+        with open(REVENUE_FILE, "w", newline="") as f:
+            writer = csv.writer(f)
+            writer.writerow(REVENUE_HEADER)
+
+    if not os.path.exists(PROFIT_FILE):
+        with open(PROFIT_FILE, "w", newline="") as f:
+            writer = csv.writer(f)
+            writer.writerow(PROFIT_HEADER)
+
+
 
 
 
