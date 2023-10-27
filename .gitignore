@@ -1,1 +1,7 @@
 /data/
+/core/__pycache__
+/functions/__pycache__
+/documenation/logics.md
+.vscode
+.devcontainer
+__pycache__
